@@ -1,0 +1,9 @@
+.vscode
+ematic_env/*
+.env
+history.txt
+suppression_list/*
+unsuppression_list/*
+library/__pycache__
+*.pyc
+history_columns.txt
