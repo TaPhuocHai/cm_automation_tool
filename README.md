@@ -25,5 +25,7 @@ Then create an isolated virtual enviroment
 
 3. Run the command  if you want to suppressing email addresses
 > python cm_automation_tool_suppresing.py
+
 Or if you want to unsuppressing email addressed
+
 > python cm_automation_tool_unsuppresing.py
