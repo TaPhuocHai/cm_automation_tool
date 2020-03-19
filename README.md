@@ -18,11 +18,12 @@ Then create an isolated virtual enviroment
 > pip install -r requirements.txt
 
 ## How to Use
-First, we need to provide credentials. Kindly open the file .env_example, copy and paste in to a new file ".env" at the same root directory. Then please change the information accordingly.
+1. There are 2 folders: suppression_list and unsuppression_list. Place the data in csv or excel format (xlsx, xls). 
 
-You also need to have 2 folder: input and output.
+2. Then, we need to provide credentials of the Campaign Monitor account. Kindly open the file .env_example, copy and paste in to a new file ".env" at the same root directory. Then please change the information accordingly depending on your intention (suppressing or unsuppressing e-mail addresses).
 
-In the input folder, place the data in csv or excel format (xlsx, xls). Then open the file mailjet_automation.py, change the constant NEW_DATA to the name of the new data file.
 
-Open our VPN connection and run 
-> python mailjet_automation.py
+3. Run the command  if you want to suppressing email addresses
+> python cm_automation_tool_suppresing.py
+Or if you want to unsuppressing email addressed
+> python cm_automation_tool_unsuppresing.py
