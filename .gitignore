@@ -4,6 +4,8 @@ ematic_env/*
 history.txt
 suppression_list/*
 unsuppression_list/*
+!suppression_list/.gitkeep
+!unsuppression_list/.gitkeep
 library/__pycache__
 *.pyc
 history_columns.txt
