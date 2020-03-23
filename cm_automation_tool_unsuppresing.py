@@ -106,20 +106,46 @@ if __name__ == "__main__":
     t.start()
     url = url = "https://api.createsend.com/api/v3.2/subscribers/%s/import.json"%("2c3b174c69438de30696dda5e388a58a")
 
+    LIMIT = 1000
     subscribers = []
-    for e in email_list:
-        subscribers.append({"EmailAddress": e,"ConsentToTrack":"Yes"})
+    count = 0
+    start = 0
+    end = LIMIT
+    # for e in enumerate(email_list):
 
-    payload = {
-        "Subscribers": subscribers,
-        "Resubscribe": True,
-        "QueueSubscriptionBasedAutoResponders": False,
-        "RestartSubscriptionBasedAutoresponders": False
-    }
-    res  = requests.post(url, auth=(API_KEY,""), json=payload)
-    print(res.json())
-    # asyncio.run(unsuppresser.unsunpress())
+    if len(email_list) > LIMIT:
+        while end <= len(email_list):
+            print("Email address from index %s to %s are being processed " %(start, end))
+            for i in range(start, end):
+                subscribers.append({"EmailAddress": email_list[i],"ConsentToTrack":"Yes"})
+            print("len of emailist: ", len(email_list))
+            payload = {
+                "Subscribers": subscribers,
+                "Resubscribe": True,
+                "QueueSubscriptionBasedAutoResponders": False,
+                "RestartSubscriptionBasedAutoresponders": False
+            }
+            res  = requests.post(url, auth=(API_KEY,""), json=payload)            
+            print("Status code: %s." % (str(res.status_code)) ,res.json())
+            start = end
+            end += LIMIT
+            subscribers = []
+    else:
+        print("Email address from index %s to %s are being processed " %(start, len(email_list)-1))
+        for i in range(len(email_list)):
+            subscribers.append({"EmailAddress": email_list[i],"ConsentToTrack":"Yes"})
+        payload = {
+            "Subscribers": subscribers,
+            "Resubscribe": True,
+            "QueueSubscriptionBasedAutoResponders": False,
+            "RestartSubscriptionBasedAutoresponders": False
+        }        
+        res  = requests.post(url, auth=(API_KEY,""), json=payload)            
+        print("Status code: %s." % (str(res.status_code)) ,res.json())
+            
+
+        # asyncio.run(unsuppresser.unsunpress())
     t.stop()
-    print()
+    print("Done unsuppressing!")
     
     
