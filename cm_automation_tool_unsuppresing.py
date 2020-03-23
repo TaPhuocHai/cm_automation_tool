@@ -100,11 +100,25 @@ if __name__ == "__main__":
     file[user_input] = file[user_input].sort_values()
     email_list = list(file[file.notnull()][user_input])
     
-    unsuppresser = Unsuppresser(email_list= email_list, client_id=CLIENT_ID, api_key=API_KEY)
+    # unsuppresser = Unsuppresser(email_list= email_list, client_id=CLIENT_ID, api_key=API_KEY)
 
     print("Number of emails to be unsuppressed: ", len(email_list))
     t.start()
-    asyncio.run(unsuppresser.unsunpress())
+    url = url = "https://api.createsend.com/api/v3.2/subscribers/%s/import.json"%("2c3b174c69438de30696dda5e388a58a")
+
+    subscribers = []
+    for e in email_list:
+        subscribers.append({"EmailAddress": e,"ConsentToTrack":"Yes"})
+
+    payload = {
+        "Subscribers": subscribers,
+        "Resubscribe": True,
+        "QueueSubscriptionBasedAutoResponders": False,
+        "RestartSubscriptionBasedAutoresponders": False
+    }
+    res  = requests.post(url, auth=(API_KEY,""), json=payload)
+    print(res.json())
+    # asyncio.run(unsuppresser.unsunpress())
     t.stop()
     print()
     
