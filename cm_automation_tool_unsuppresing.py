@@ -18,7 +18,7 @@ load_dotenv()
 
 API_KEY = os.getenv("UNSUPPRESSING_API_KEY") 
 CLIENT_ID = os.getenv("UNSUPPRESSING_CLIENT_ID") 
-
+LIST_ID = os.getenv("UNSUPPRESSING_LIST_ID")
 
 if __name__ == "__main__":
     # Check if folder unsuppression_list exists
@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
     print("Number of emails to be unsuppressed: ", len(email_list))
     t.start()
-    url = url = "https://api.createsend.com/api/v3.2/subscribers/%s/import.json"%("2c3b174c69438de30696dda5e388a58a")
+    url = url = "https://api.createsend.com/api/v3.2/subscribers/%s/import.json"%(LIST_ID)
 
     LIMIT = 1000
     subscribers = []
@@ -130,6 +130,24 @@ if __name__ == "__main__":
             start = end
             end += LIMIT
             subscribers = []
+
+        print("Email address from index %s to %s are being processed " %(start, len(email_list)-1))
+        for i in range(start, len(email_list)):
+            subscribers.append({"EmailAddress": email_list[i],"ConsentToTrack":"Yes"})
+        print("len of emailist: ", len(email_list)-start)
+        payload = {
+            "Subscribers": subscribers,
+            "Resubscribe": True,
+            "QueueSubscriptionBasedAutoResponders": False,
+            "RestartSubscriptionBasedAutoresponders": False
+        }
+        res  = requests.post(url, auth=(API_KEY,""), json=payload)            
+        print("Status code: %s." % (str(res.status_code)) ,res.json())
+        start = end
+        end += LIMIT
+        subscribers = []
+
+
     else:
         print("Email address from index %s to %s are being processed " %(start, len(email_list)-1))
         for i in range(len(email_list)):
