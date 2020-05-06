@@ -235,8 +235,8 @@ if __name__ == "__main__":
 
     cm_client = CampaignMonitorClient(client_id,api_key,page_size)
     suppresion_list,suppresion_numb = cm_client.fetchAllSuppressedUsers()
-    
-    contact_list = cm_client.fetchContactList()[0][0]
+        
+    contact_list = account['default_list_id']
 
     active_list,active_numb = cm_client.fetchAllSubscribers(contact_list)
 
