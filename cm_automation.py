@@ -188,10 +188,8 @@ def getDvScore():
     files = {
         'file': open(OUTPUT_DIR_NAME + "/" + file, 'rb')
     }
-    # list_id = requests.post(upload_csv_url, headers=headers, files=files)
     list_id = s.post(upload_csv_url, headers=headers, files=files)
-    dv_result_url = 'https://dv3.datavalidation.com/api/v2/user/me/list/' + list_id.json()
-    # dv_result = requests.get(dv_result_url, headers=headers).json()
+    dv_result_url = 'https://dv3.datavalidation.com/api/v2/user/me/list/' + list_id.json()    
     dv_result = s.get(dv_result_url, headers=headers).json()
     while dv_result['status_value'] == 'PRE_VALIDATING':
         dv_result = requests.get(dv_result_url, headers=headers).json()
@@ -266,9 +264,6 @@ if __name__ == "__main__":
 
     spinner.start("Processing the data")
   
-
-    # contacts.to_csv(OUTPUT_DIR_NAME + "/current_mj_db.csv",index=False)
-
     spinner.succeed(text="Done processing the data")
 
     clean_data(cm_data)
