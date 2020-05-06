@@ -9,3 +9,7 @@ unsuppression_list/*
 library/__pycache__
 *.pyc
 history_columns.txt
+input/*
+output/*
+!input/.gitkeep
+!output/.gitkeep
