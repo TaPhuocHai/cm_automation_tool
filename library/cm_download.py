@@ -93,6 +93,58 @@ class CampaignMonitorClient:
         return unsub_list
 
 
+    def __fetchBouncedSubscribers(self, page, page_size, list_id, client_id, verbose=False):
+        """
+        Fetch fetchBouncedSubscribers
+        Parameters:
+        - page: page number (if there are more one page, we need to call multitimes to get all suppressed number)
+        - page_size: number of maximum users each response returns
+        - client_id: Client ID of the Campaign Monitor
+        - verbose:  If set to True, the function keeps the TotalNumberOfRecords and Number Of Pages in the return value tuple. This is helpful to know how many users and requests required to call Campaign Monitor API
+        Return a list of unsubsribers if verbose is False
+        Return a tupple of a list of unsubsribers, TotalNumberOfRecords, NumberOfPages  if verbose is True
+        """    
+        url = f"https://api.createsend.com/api/v3.2/lists/{list_id}/bounced.json?&page={page}&pagesize={page_size}"
+        bounced_list = []
+        r = requests.get(url, auth=(self.api_key, ""))
+        data = r.json()
+        for item in data['Results']:
+            bounced_list.append(item["EmailAddress"])
+
+        if verbose == True:
+            TotalNumberOfRecords = data['TotalNumberOfRecords']
+            NumberOfPages = data['NumberOfPages']
+
+            return bounced_list, TotalNumberOfRecords, NumberOfPages
+
+        return bounced_list    
+
+    def __fetchDeletedSubscribers(self, page, page_size, list_id, client_id, verbose=False):
+        """
+        Fetch fetchDeletedSubscribers
+        Parameters:
+        - page: page number (if there are more one page, we need to call multitimes to get all suppressed number)
+        - page_size: number of maximum users each response returns
+        - client_id: Client ID of the Campaign Monitor
+        - verbose:  If set to True, the function keeps the TotalNumberOfRecords and Number Of Pages in the return value tuple. This is helpful to know how many users and requests required to call Campaign Monitor API
+        Return a list of unsubsribers if verbose is False
+        Return a tupple of a list of unsubsribers, TotalNumberOfRecords, NumberOfPages  if verbose is True
+        """    
+        url = f"https://api.createsend.com/api/v3.2/lists/{list_id}/deleted.json?&page={page}&pagesize={page_size}"
+        deleted_list = []
+        r = requests.get(url, auth=(self.api_key, ""))
+        data = r.json()
+        for item in data['Results']:
+            deleted_list.append(item["EmailAddress"])
+
+        if verbose == True:
+            TotalNumberOfRecords = data['TotalNumberOfRecords']
+            NumberOfPages = data['NumberOfPages']
+
+            return deleted_list, TotalNumberOfRecords, NumberOfPages
+
+        return deleted_list       
+    
     def fetchContactList(self):
         """
         Fetch all available contact list in the Campaign Account
@@ -141,6 +193,29 @@ class CampaignMonitorClient:
         
         print("Done fetching all unsubscribers")
         return active_list, TotalNumberOfRecords
+
+    def fetchAllBouncedSubscribers(self, list_id):
+        # print("Start fetching all bounced subscribers")
+        page = 1
+        bounced_list,TotalNumberOfRecords, NumberOfPages = self.__fetchBouncedSubscribers(page, self.page_size, list_id, self.client_id, verbose=True)
+        if NumberOfPages > 1:
+            for page in range(2, NumberOfPages+1):
+                bounced_list += self.__fetchBouncedSubscribers(page, self.page_size, list_id, self.client_id, verbose=False)
+        
+        print("Done fetching all bounced subscribers")
+        return bounced_list, TotalNumberOfRecords
+
+    def fetchAllDeletedSubscribers(self, list_id):
+        # print("Start fetching all deleted subscribers")
+        page = 1
+        deleted_list,TotalNumberOfRecords, NumberOfPages = self.__fetchDeletedSubscribers(page, self.page_size, list_id, self.client_id, verbose=True)
+        if NumberOfPages > 1:
+            for page in range(2, NumberOfPages+1):
+                deleted_list += self.__fetchDeletedSubscribers(page, self.page_size, list_id, self.client_id, verbose=False)
+        
+        print("Done fetching all deleted users")
+        return deleted_list, TotalNumberOfRecords
+
 
 """
 Demo how the module can be ran
