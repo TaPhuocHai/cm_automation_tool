@@ -22,7 +22,7 @@ OUTPUT_DIR_NAME = 'output'
 # Constants, global variables
 # NEW_DATA represent the data we want to check quality and do cleaning up
 # You should have such file in input directory
-NEW_DATA = "" # you should change name accordingly, excel or csv is okay!
+NEW_DATA = "Edit_List_Email__Oct2020.xlsx" # you should change name accordingly, excel or csv is okay!
 
 # Credentials
 CSE_EMAIL = os.getenv("CSE_EMAIL") 
@@ -120,6 +120,7 @@ if __name__ == "__main__":
 
     # ## Fetching the contacts    
     t = Timer(name="class", text="Time to fetch the contacts: {seconds:.1f} seconds")
+
     spinner = Halo(text="Fetching contacts via API ..", spinner='dots', text_color="grey")
     spinner.start()        
     t.start()
@@ -163,7 +164,7 @@ if __name__ == "__main__":
     })
 
     cm_data = active_df.append(unsub_df).append(excluded_df).append(deleted_df).append(bounced_df)
-
+    
     cm_data.to_csv(OUTPUT_DIR_NAME + "/current_cm_data.csv", index=False)
     
     spinner = spinner.succeed(text="Downloaded all contacts")
@@ -172,6 +173,7 @@ if __name__ == "__main__":
     spinner.start("Processing the data")
   
     spinner.succeed(text="Done processing the data")
+    
     
     
     cm_data = pd.read_csv(OUTPUT_DIR_NAME + "/current_cm_data.csv")
