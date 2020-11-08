@@ -22,7 +22,8 @@ OUTPUT_DIR_NAME = 'output'
 # Constants, global variables
 # NEW_DATA represent the data we want to check quality and do cleaning up
 # You should have such file in input directory
-NEW_DATA = "" # you should change name accordingly, excel or csv is okay!
+NEW_DATA = "Edit_List_Email__Oct2020.xlsx" # you should change name accordingly, excel or csv is okay!
+
 
 # Credentials
 DV_API_KEY = os.getenv("DV_API_KEY")
@@ -30,7 +31,7 @@ HIIQ_API_KEY = os.getenv("HIIQ_API_KEY")
 HIIQ_URL = os.getenv("HIIQ_URL")
 
 def getDvScore(path_to_file):
-    spinner = Halo(text="Checking dv score  of the cleaned data by cse2 tool", spinner='dots', text_color="grey")
+    spinner = Halo(text="Checking dv score  of the cleaned data by cse2 tool", spinner='dots', text_color="cyan")
     spinner.start()
 
     file = path_to_file #NEW_DATA.split(".")[0] + "_to_cse2_out.csv"
@@ -70,6 +71,8 @@ def getDvScore(path_to_file):
             return 0
         else:
             print("Something goes wrong")
+    
+    spinner.stop()
 
 def clean_data(current_users):
     global NEW_DATA
@@ -135,14 +138,13 @@ def clean_data(current_users):
     good_emails = merged[merged['_merge']=='right_only']
     print("Number of user after remove blacklisted domain: ", len(good_emails))
     good_emails = good_emails['Email']
-    good_emails.to_csv(OUTPUT_DIR_NAME + "/" + file_name + "_to_hyatt.csv", index=False, header=True)
+    result_file =  OUTPUT_DIR_NAME + "/" + file_name + "_to_hyatt.csv"
+    good_emails.to_csv(result_file, index=False, header=True)
     bad_emails  = merged[merged['_merge']=='both']
     bad_emails.to_csv(OUTPUT_DIR_NAME + "/" + file_name + "_blacklisted.csv", index=False, header=True, columns=["Email", "Domain"])
 
-    getDvScore(OUTPUT_DIR_NAME + "/" + file_name + "_blacklisted.csv")
+    return result_file
     
-    return "Done"
-
 
 if __name__ == "__main__":
     # turn on vpn
@@ -163,7 +165,7 @@ if __name__ == "__main__":
     # ## Fetching the contacts    
     t = Timer(name="class", text="Time to fetch the contacts: {seconds:.1f} seconds")
 
-    spinner = Halo(text="Fetching contacts via API ..", spinner='dots', text_color="grey")
+    spinner = Halo(text="Fetching contacts via API ..", spinner='dots', text_color="cyan")
     spinner.start()        
     t.start()
 
@@ -210,16 +212,19 @@ if __name__ == "__main__":
     cm_data.to_csv(OUTPUT_DIR_NAME + "/current_cm_data.csv", index=False)
     
     spinner = spinner.succeed(text="Downloaded all contacts")
+    spinner.stop()
+
     t.stop()
 
+    spinner = Halo(spinner='dots', text_color="cyan")
     spinner.start("Processing the data")
-  
-    spinner.succeed(text="Done processing the data")
-    
-    
-    
     cm_data = pd.read_csv(OUTPUT_DIR_NAME + "/current_cm_data.csv")
-    print(clean_data(cm_data))
+    spinner.succeed(text="Done processing the data")
+    spinner.stop()
+    result_file = clean_data(cm_data)
+    getDvScore(result_file)
+
+    
     
     spinner.succeed("Program completed!")
 
