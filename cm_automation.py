@@ -31,10 +31,10 @@ HIIQ_API_KEY = os.getenv("HIIQ_API_KEY")
 HIIQ_URL = os.getenv("HIIQ_URL")
 
 def getDvScore(path_to_file):
-    spinner = Halo(text="Checking dv score  of the cleaned data by cse2 tool", spinner='dots', text_color="cyan")
+    spinner = Halo(text="Checking dv score  of the cleaned data", spinner='dots', text_color="cyan")
     spinner.start()
 
-    file = path_to_file #NEW_DATA.split(".")[0] + "_to_cse2_out.csv"
+    file = path_to_file
     url = 'https://dv3.datavalidation.com/api/v2/user/me/list/create_upload_url/'
     params = '?name=' + file + '&email_column_index=0&has_header=0&start_validation=false'     
     headers = { 'Authorization': 'Bearer ' + DV_API_KEY }
@@ -104,8 +104,7 @@ def clean_data(current_users):
     
     new_emails = new_user_data[email_header] #E-Mail or Email
     new_emails = new_user_data.rename(columns={email_header: "Email"})['Email']
-    print("Number of users in the new file: ", len(new_emails))    
-    # new_emails.sort_index(inplace=True)
+    print("Number of users in the new file: ", len(new_emails))        
     new_emails = new_emails.str.lower()
     new_emails = new_emails.str.strip()
     new_emails.drop_duplicates(keep="last", inplace=True)

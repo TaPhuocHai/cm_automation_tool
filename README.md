@@ -4,18 +4,9 @@
 1) Python
 Ensure you have Python version 3.6 or later. Kindly visit https://www.python.org/ and download Python version 3 on your system.
 
-2) Clone or simply download the code
+2) Clone the the project with git or simply download the code
 
-3) Install virtual environment package (Highly recommend but not 100% necessary)
-
-> python -m pip install --user virtualenv
-Then create an isolated virtual enviroment
-> python -m virtualenv ematic_env
-
-4) Activate the virtual enviroment (You can skip this if you don't do step 3)
-> source ematic_env/bin/activate
-
-5) Install dependencies for our program
+3) Install dependencies for our program
 > pip install -r requirements.txt
 
 ## How to Use
@@ -44,4 +35,4 @@ In the input folder, place the data in csv or excel format (xlsx, xls). Then ope
 
 Open our VPN connection and run 
 
-\> python cm_automation.py
+> python cm_automation.py
